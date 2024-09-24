@@ -1,8 +1,11 @@
 package okestro.hjpark.service;
 
-import okestro.hjpark.dto.BoardDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,22 +13,41 @@ import java.util.Map;
 public class BoardService {
 
     public Map<String, Object> boardList() {
-        Map<String, Object> map = new HashMap();
+        File file = new File("src/main/java/okestro/hjpark/temp/boardData.json");
 
-        for (int i = 1; i <= 100; i++) {
-            BoardDTO response = BoardDTO.builder()
-                    .id(i)
-                    .title("test" + i)
-                    .author("박희준" + i)
-                    .comment_cnt(i % 5)  // 예시로 0~4개의 댓글 수를 만듦
-                    .build();
+        Map<String, Object> jsonData = new HashMap();
+        ObjectMapper mapper = new ObjectMapper();
 
-            map.put(String.valueOf(i), response);
+        try {
+            jsonData = mapper.readValue(file, HashMap.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return map;
+
+        return jsonData;
     }
 
-    public Map<String, Object> boardDetails(int id) {
+    public Map<String, Object> boardDetail(int id) {
+        File file = new File("src/main/java/okestro/hjpark/temp/boardData.json");
 
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Map<String, Object>> jsonData = null;
+
+        try {
+            // JSON 객체를 Map<String, Map>으로 파싱
+            jsonData = mapper.readValue(file, new TypeReference<Map<String, Map<String, Object>>>() {});
+
+            // 특정 id 값을 가진 행 찾기
+            String idKey = String.valueOf(id);
+            if (jsonData.containsKey(idKey)) {
+                return jsonData.get(idKey);  // id 값에 해당하는 행을 반환
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
+
 }

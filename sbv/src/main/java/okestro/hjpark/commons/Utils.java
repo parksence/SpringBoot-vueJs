@@ -33,4 +33,5 @@ public class Utils {
 
         return objectMapper.readValue(json, typeReference);
     }
+
 }

@@ -34,10 +34,25 @@ public class BoardController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{no}")
-    public ResponseEntity<BaseResponse> boardDetail(@PathVariable("no") String no) {
-        Map<String, Object> boardDetail = boardService.boardList();
+    @GetMapping("/list/{id}")
+    public ResponseEntity<BaseResponse> boardDetail(@PathVariable("id") int id) {
+        Map<String, Object> boardDetail = boardService.boardDetail(id);
 
+        if (boardDetail == null) {
+            BaseResponse response = BaseResponse.builder()
+                    .code("NOT_FOUND")
+                    .data(null)
+                    .build();
+
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+
+        BaseResponse response = BaseResponse.builder()
+                .code("OK")
+                .data(Utils.asMap(boardDetail))
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
