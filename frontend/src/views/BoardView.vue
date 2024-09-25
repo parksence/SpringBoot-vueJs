@@ -63,10 +63,9 @@ export default {
     onClick(ev) {
       if (ev.columnName === 'title' && ev.rowKey + 1) {
         const post = this.gridProps.data[ev.rowKey];
-        const postId = post.no;
-        const postTitle = post.title;
+        const postId = post.id;
 
-        window.open(`/detail/${postId}/${encodeURIComponent(postTitle)}`, '_blank');
+        window.open(`/board/detail/${postId}`, '_blank');
       }
     },
     onPageChange(page) {
